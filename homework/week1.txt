@@ -1,0 +1,10 @@
+Homework Week 1
+
+Expand on the drawing activity we made this week, and turn it into a coloring book. To do so, do the following:
+
+- Add a way to select different colors
+- Add a way to change transparency
+- Add a way to change brush size
+- Add an eraser
+- Add a way to change coloring pages (images)
+- Make a coloring page that forces you to color inside the lines
