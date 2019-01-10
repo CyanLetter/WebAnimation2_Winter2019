@@ -1,7 +1,7 @@
-var canvas = document.getElementById("drawingCanvas");
-var ctx = canvas.getContext("2d");
-var drawing = false;
-var lastPos = null;
+const canvas = document.getElementById("drawingCanvas");
+const ctx = canvas.getContext("2d");
+let drawing = false;
+let lastPos = null;
 
 function makeCircle(x, y, color) {
 	// set color
