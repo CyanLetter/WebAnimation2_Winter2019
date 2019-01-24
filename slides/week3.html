@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Web Animations 2</title>
+
+		<meta name="description" content="Lecture for Game Dev">
+		<meta name="author" content="Dakota Ling">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/monokai-sublime.css">
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>PixiJS</h1>
+				</section>
+
+				<section>
+					<!-- Downloading, docs -->
+					<section>
+						<h2>Getting Started</h2>
+						<p><a href="http://www.pixijs.com/">pixijs.com</a></p>
+						<br>
+						<p>Docs</p>
+						<p><a href="http://pixijs.download/release/docs/index.html">pixijs.io/docs</a></p>
+					</section>
+				</section>
+
+				<section>
+					<!-- Creating the app, picking a renderer -->
+					<section>
+						<h2>Application class</h2>
+						<p>A convenient abstraction</p>
+
+						<ul>
+							<li>Renderer + Context</li>
+							<li>Container</li>
+							<li>Ticker</li>
+						</ul>
+					</section>
+
+					<section>
+						<p>Basic</p>
+<pre><code>
+let app = new PIXI.Application();
+	
+</code></pre>
+					</section>
+
+					<section>
+						<p>Use existing canvas</p>
+<pre><code>
+let app = new PIXI.Application({
+	view: document.getElementById("pixiCanvas")
+});
+
+</code></pre>
+					</section>
+
+					<section>
+						<h2>The renderer</h2>
+						<p>Defaults to WebGL if supported, falls back to canvas</p>
+<pre><code>
+let app = new PIXI.Application({
+	forceCanvas: true
+});
+
+</code></pre>
+					</section>
+
+					<section>
+						<h2>Quirks</h2>
+						<ul>
+							<li>Access context through app.renderer</li>
+							<li><a href="https://github.com/pixijs/pixi.js/issues/458">Colors</a> are different</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<!-- performance -->
+					<section>
+						<h2>Benchmarking</h2>
+						<p><a href="https://www.goodboydigital.com/pixijs/canvas/bunnymark/">Canvas</a></p>
+						<p><a href="https://www.goodboydigital.com/pixijs/bunnymark/">WebGL</a></p>
+					</section>
+				</section>
+
+				<section>
+					<!-- Basics - containers, loader, sprites -->
+					<section>
+						<h2>The Ticker</h2>
+						<p>Much like TweenMax and RAF</p>
+<pre><code>
+function update(e) {
+	console.log(e);
+}
+
+window.onload = function() {
+	app.ticker.add((e) => update(e));
+}
+
+</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>The Display List</h2>
+						<p>How Pixi manages items to render to canvas.</p>
+						<p>Draws every frame, not just once.</p>
+						<p>Access with <code>app.stage</code></p>
+					</section>
+					<section>
+						<h2>Containers and Sprites</h2>
+						<p>A sprite is an abstraction for an image</p>
+<pre><code>
+let ball = new PIXI.Sprite.fromImage("dist/img/logo.png");
+app.stage.addChild(ball);
+
+</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Preloading</h2>
+						<p>Load a manifest of images before trying to render</p>
+<pre><code>
+function loadAssets() {
+	app.loader.add("ball", "dist/img/logo.png");
+	app.loader.load(onAssetsLoaded);
+}
+
+function onAssetsLoaded(loader, resources) {
+	let ball = new PIXI.Sprite(resources.ball.texture);
+	app.stage.addChild(ball);
+}
+</code></pre>
+					</section>
+
+					<section>
+						<p>Can also make an array.</p>
+<pre><code>
+let manifest = [
+	{"key" : "ball", "url" : "dist/img/logo.png"}
+];
+
+app.loader.add(manifest);
+
+</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<!-- rotation and anchor points -->
+					<section>
+						<p>Other Sprite conveniences</p>
+						<ul>
+							<li>Rotation</li>
+							<li>Anchor</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Hierarchy and nesting</h2>
+						<p>Add things inside of other things!</p>
+<pre><code>
+let ball2 = new PIXI.Sprite(resources.ball.texture);
+ball.addChild(ball2);
+
+</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<!-- interactivity -->
+					<section>
+						<h2>Interactivity</h2>
+						<p>Can enable interactivity on sprites</p>
+						<p><a href="http://pixijs.download/dev/docs/PIXI.interaction.InteractionManager.html">Events</a> are different</p>
+
+<pre><code>
+ball.interactive = true;
+ball.on("pointerdown", function() {
+	console.log("Cliked!")
+});
+</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<!-- spritesheets and playback -->
+					<section>
+						<h2>Spritesheet Animations</h2>
+						<p><a href="https://opengameart.org/content/explosion">Explosion Art</a></p>
+					</section>
+
+					<section>
+						<p>We need data files</p>
+
+						<p>Free tool: <a href="https://www.leshylabs.com/apps/sstool/">leshylabs sstool</a></p>
+
+						<ul>
+							<li>Grid Remap</li>
+							<li>JSON-TP-Hash</li>
+						</ul>
+					</section>
+
+					<section>
+						<p>Paid tool: <a href="https://www.codeandweb.com/texturepacker">Texture Packer</a></p>
+					</section>
+
+					<section>
+						<p>Load and push textures to array</p>
+<pre><code>
+let explosionAnim = [];
+
+app.loader.add("explosion", "dist/img/explosion.json");
+
+for (let tex in resources.explosion.textures) {
+	explosionSequence.push(resources.explosion.textures[tex]);
+}
+
+
+</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<p>Let's build Exploding Whack-a-Mole</p>
+					<p>Or <a href="https://opengameart.org/content/little-penguin">penguin</a></p>
+				</section>
+				
+				<section>
+					<h2>Homework</h2>
+					<p>Make a tiny game</p>
+					<ul>
+						<li>Tic tac toe</li>
+						<li>Concentration</li>
+						<li>Simon</li>
+						<li>Connect Four</li>
+					</ul>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
