@@ -1,0 +1,10 @@
+Create a landing page, with an attention-grabbing full screen interactive area built with PixiJS. Something you would expect to see when you first open a site on awwwards.
+
+The page should have three main components:
+- A full screen effect/interaction
+- A tagline
+- A Call to Action
+
+Your interactive effect can include particles, spritesheet animations, filters and effects, etc. 
+
+Explore what is out there, find some references, and make a plan for the pieces you want to explore further.

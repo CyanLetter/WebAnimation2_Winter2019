@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Web Animations 2</title>
+
+		<meta name="description" content="Lecture for Game Dev">
+		<meta name="author" content="Dakota Ling">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/monokai-sublime.css">
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Filters, masks, displacement</h1>
+				</section>
+
+				<section>
+					<h2>Resources</h2>
+					<p>Located in the class git repository</p>
+					<p>Images from <a href="https://unsplash.com">Unsplash</a></p>
+					<p>Video from <a href="https://videos.pexels.com/search/timelapse">Pexels</a></p>
+				</section>
+
+				<section>
+					<!-- Fullscreening -->
+					<section>
+						<h2>Fullscreen</h2>
+						<p>Making canvas take up the page</p>
+					</section>
+					<section>
+						<p>Layout is not built in</p>
+						<ul>
+							<li>No 'center'</li>
+							<li>No positioning</li>
+							<li>No flexbox</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Option 1</h2>
+						<p>Calculate all positions yourself.</p>
+						<p><a href="https://github.com/pixijs/pixi.js/wiki/v4-Tips%2C-Tricks%2C-and-Pitfalls#resizing-renderer">Examples</a></p>
+					</section>
+					<section>
+						<h2>Option 2</h2>
+						<p>Use a fixed canvas size, scale up or down.</p>
+					</section>
+					<section>
+						<p>Go with Option 2.</p>
+						<ul>
+							<li>Keep canvas small</li>
+							<li>Keep experience simple</li>
+							<li>Put focal point in center</li>
+						</ul>
+					</section>
+					<section>
+						<p>Resize function</p>
+<pre><code class="javascript">
+let canvasAspect = app.screen.width / app.screen.height;
+let screenAspect = window.innerWidth / window.innerHeight;
+let scale = 1;
+
+if (screenAspect >= canvasAspect) {
+	scale = window.innerWidth / app.screen.width;
+} else {
+	scale = window.innerHeight / app.screen.height;
+}
+
+</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<!-- masks -->
+					<section>
+						<h2>Masks</h2>
+						<p>Guide for what to show and what to hide</p>
+					</section>
+					<section>
+						<p>Can use one sprite to mask another</p>
+<pre><code class="javascript">
+let bg = new PIXI.Sprite( ... );
+app.stage.addChild(bg);
+
+let ball = new PIXI.Sprite( ... );
+app.stage.addChild(ball);
+
+bg.mask = ball;
+
+</code></pre>
+					</section>
+
+					<section>
+						<p>Opacity</p>
+						<ul>
+							<li>transparent = hidden</li>
+						</ul>
+						<p>Lightness</p>
+						<ul>
+							<li>black = hidden</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<!-- video texture -->
+					<section>
+						<h2>Video</h2>
+						<p>Load video as a texture</p>
+					</section>
+
+					<section>
+<pre><code class="javascript">
+let vidTex = new PIXI.Texture.fromVideo(...);
+let vid = new PIXI.Sprite(vidTex);
+
+vidTex.baseTexture.source.setAttribute('loop','');
+
+app.stage.addChild(vid);
+</code></pre>
+					</section>
+					
+					<section>
+						<p>You can apply masks to video as well</p>
+						<p><a href="http://www.because-recollection.com/sefyu">Example</a></p>
+					</section>
+				</section>
+
+				<section>
+					<!-- filter basics -->
+					<section>
+						<h2>Filters</h2>
+						<p>Just another class...</p>
+						<p>Basics are built in, others need to be loaded separately</p>
+						<p><a href="https://pixijs.io/pixi-filters/docs/">Docs</a> and <a href="https://pixijs.io/pixi-filters/tools/demo/">Demo</a></p>
+					</section>
+
+					<section>
+						<p>Set via array</p>
+<pre><code class="javascript">
+testFilter = new PIXI.filters.BlurFilter();
+testFilter.blur = 5;
+
+ball.filters = [testFilter];
+</code></pre>
+					</section>
+
+					<section>
+						<p>You can animate these properties</p>
+<pre><code class="javascript">
+TweenMax.fromTo(
+	testFilter, 
+	1, 
+	{blur: 0}, 
+	{blur: 10, repeat: -1, yoyo: true}
+);
+
+</code></pre>
+					</section>
+
+					<section>
+						<h2>Advanced filters</h2>
+						<p>Filters are basically 3D shaders</p>
+						<p><a href="https://github.com/pixijs/pixi-filters">Separate repository.</a></p>
+						<p>Community generated shaders and code.</p>
+					</section>
+				</section>
+
+				<section>
+					<!-- displacement map -->
+					<section>
+						<h2>Displacement filter</h2>
+						<p>Using texture data to alter images</p>
+						<p><a href="https://www.youtube.com/watch?v=LnAoD7hgDxw">Shader example</a></p>
+					</section>
+
+					<section>
+						<p>Pixi's displacement filter basically acts like a normal map</p>
+					</section>
+
+					<section>
+					<p>Animate intensity with the filter scale property</p>
+<pre><code class="javascript">
+TweenMax.fromTo(
+	displaceFilter.scale, 
+	1, 
+	{x: 40, y: 40}, 
+	{x: 0, y: 0, ease: Elastic.easeOut});
+
+</code></pre>
+					</section>
+
+					<section>
+						<p>A previous example: <a href="https://libertine-libertine.com/">libertine</a></p>
+						<p>And <a href="http://taotajima.jp/works/itsuka-no-hoshi/">another</a></p>
+					</section>
+				</section>
+				
+				<section>
+					<h2>Project 1</h2>
+					<p>
+						Create a landing page for yourself, in an alternate reality where you are a french developer.
+					</p>
+					<p><a href="http://www.briteliteimmersive.com/">Britelite</a></p>
+					<p><a href="http://www.because-recollection.com/amadou-et-mariam">because-recollection</a></p>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
