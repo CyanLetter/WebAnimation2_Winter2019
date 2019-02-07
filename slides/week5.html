@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Web Animations 2</title>
+
+		<meta name="description" content="Lecture for Game Dev">
+		<meta name="author" content="Dakota Ling">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/monokai-sublime.css">
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Manipulating Textures</h1>
+				</section>
+
+				<section>
+					<section>
+						<h2>More Reference</h2>
+						<p><a href="https://juliebonnemoy.com">Julie Bonnemoy</a></p>
+						<p><a href="http://www.benmingo.com">Ben Mingo</a></p>
+					</section>
+					<section>
+						<p>Grab week 5 resources</p>
+					</section>
+				</section>
+
+				<section>
+					<!-- Animating textures - sprite size, wrap mode -->
+					<section>
+						<h2>Animating textures</h2>
+						<p>Displacement filter does not give obvious way to do this.</p>
+					</section>
+					<section>
+						<p>Solution: make a bigger sprite than you need, move x and y</p>
+					</section>
+					<section>
+						<p>Tiling (like background repeat)</p>
+<pre><code class="javascript">
+img.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+
+let sprite = new PIXI.Sprite(img.texture, 2048, 1920);
+
+</code></pre>
+					</section>
+					<section>
+						<p>Change position</p>
+<pre><code class="javascript">
+let filter = new PIXI.filters.DisplacementFilter(img);
+
+TweenMax.fromTo(img, 10, 
+	{
+		x: -1024, 
+		y: 0
+	}, {
+		x: 0, 
+		y: -640, 
+		ease: Linear.easeNone, 
+		repeat: -1
+	});
+
+</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Multiple canvases</h2>
+					<p>You can make multiple Pixi instances</p>
+				</section>
+
+				<section>
+					<!-- render texture -->
+					<section>
+						<h2>Render Textures</h2>
+						<p>Draw arbitrary graphics to a new texture</p>
+					</section>
+					<section>
+						<p>Create, then render manually, like a snapshot</p>
+<pre><code class="javascript">
+let rt = PIXI.RenderTexture.create(1280, 720);
+let renderSprite = new PIXI.Sprite(rt);
+app2.stage.addChild(renderSprite);
+
+// render our bg from the other canvas
+app2.renderer.render(bg, rt);
+
+</code></pre>
+					</section>
+					<section>
+						<p>You can render the stage to itself with two render textures</p>
+<pre><code class="javascript">
+let rt2 = PIXI.RenderTexture.create(1280, 720);
+
+// in update
+let temp = rt;
+rt = rt2;
+rt2 = temp;
+renderSprite.texture = rt;
+
+app2.renderer.render(app2.stage, rt2);
+
+</code></pre>
+					</section>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,86 @@
+/* 
+==============================================
+CONTENT:	Project Name Here
+AUTHOR:		Your Name Here
+==============================================
+
+TABLE OF CONTENTS:
+
+0. Reset
+1. Main Layout
+2. Content
+
+==============================================
+*/
+
+/* 0. Reset ================================= */
+@import 'reset';
+
+
+/* 1. Main Layout ================================= */
+
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	font-family: sans-serif;
+	background: #444;
+}
+
+
+
+
+/* 2. Content ================================= */
+
+.content {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+#pixiCanvas {
+	position: absolute;
+	width: calc(100% - 40px);
+	left: 20px;
+	top: 20px;
+}
+
+.tagline {
+	position: absolute;
+	top: 50%;
+	left: 10%;
+	transform: translateY(-50%);
+	font-family: Helvetica, sans-serif;
+	font-size: 15vw;
+	font-weight: 600;
+	color: white;
+	text-align: left;
+	// text-transform: uppercase;
+}
+
+@media screen and (min-aspect-ratio: 1/1) {
+	.tagline {
+		font-size: 15vh;
+		letter-spacing: 0.5vh;
+		left: 180px;
+	}
+
+	#pixiCanvas {
+		position: absolute;
+		height: calc(100% - 80px);
+		width: auto;
+		left: 40px;
+		top: 40px;
+	}
+}
